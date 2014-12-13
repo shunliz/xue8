@@ -5,6 +5,8 @@
 .svn
 .idea
 
+.settings
+
 target/
 
 *.pbxuser
