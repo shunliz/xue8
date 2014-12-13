@@ -11,3 +11,4 @@ A generic J2EE web project prototype, add generic features step by step.........
 3. Support Spring Security
 4. Support Bootstrap.
 5. Basic user management module.
+6. Standard html5 support.
