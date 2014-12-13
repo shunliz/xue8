@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <context:property-placeholder location="/WEB-INF/jdbc.properties"/>
+    
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+    <property name="url" value="jdbc:mysql://localhost:3306/idating" />
+    <property name="username" value="root" />
+    <property name="password" value="root" />
+    <property name="initialSize" value="1" />
+    <property name="maxActive" value="500" />
+    <property name="maxIdle" value="2" />
+    <property name="minIdle" value="1" />
+  </bean>
+
+  <bean id="sessionFactory"
+	    class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+	    <property name="dataSource">
+	      <ref bean="dataSource" />
+	    </property>
+	    <property name="hibernateProperties">
+	      <props>
+	        <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+	        <prop key="hibernate.show_sql">false</prop>
+	        <prop key="hibernate.use_sql_comments">false
+	        </prop>
+	        <prop key="hibernate.generate_statistics">false
+	        </prop>
+	        <!--
+	          是否启用缓存 hibernate.cache.use_second_level_cache=true
+	          hibernate.cache.use_query_level_cache=false
+	          hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
+	          如果不设置“查询缓存”，那么hibernate只会缓存使用load()方法获得的单个持久化对象，如果想缓存使用findall()、list()、Iterator()、createCriteria()、createQuery()等方法获得的数据结果集的话，就需要设置
+	                    hibernate.cache.use_query_cache true 才行
+	                                                     如果需要“查询缓存”，还需要在使用Query或Criteria()时设置其setCacheable(true);属性
+	        -->
+	      </props>
+	    </property>
+	
+	    <property name="annotatedClasses">
+	      <list>
+	        <value>com.zsl.idating.entity.User</value>
+	      </list>
+	    </property>
+	  </bean>
+	
+	  <!-- 事务管理  -->
+	  <bean id="transactionManager"
+	    class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+	    <property name="sessionFactory" ref="sessionFactory" />
+	    <property name="dataSource">
+	      <ref bean="dataSource" />
+	    </property>
+	  </bean>
+	
+	
+	  <!-- 基于AOP的Annotation事务管理 -->
+	  <bean
+	    class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
+	  <bean
+	    class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor">
+	    <property name="transactionInterceptor">
+	      <ref bean="transactionInterceptor" />
+	    </property>
+	  </bean>
+	
+	  <bean id="transactionInterceptor"
+	    class="org.springframework.transaction.interceptor.TransactionInterceptor">
+	    <property name="transactionManager">
+	      <ref bean="transactionManager" />
+	    </property>
+	    <property name="transactionAttributeSource">
+	      <bean
+	        class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+	    </property>
+	  </bean>
+     
+
+    <context:spring-configured/>
+
+    <context:component-scan base-package="com.zsl.idating">
+        <context:exclude-filter expression="org.springframework.stereotype.Controller" type="annotation"/>
+    </context:component-scan>
+
+    <bean id="applicationMessageSource" class="com.zsl.idating.util.ReloadableMessageSource">
+        <property name="cacheSeconds" value="5"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="fallbackToSystemLocale" value="false"/>
+        <property name="useCodeAsDefaultMessage" value="true" />
+        <property name="basenames">
+            <list>
+                <value>classpath:build</value>
+                <value>classpath:validation</value>
+                <value>classpath:messages</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="validationMessageSource" ref="applicationMessageSource" />
+    </bean>
+
+    <!-- Custom property editors -->
+    <bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+         <property name="customEditors">
+             <map>
+                 <entry key="java.io.Reader" value="com.zsl.idating.util.ServletContextResourceReaderPropertyEditor" />
+             </map>
+         </property>
+     </bean>
+
+    <bean class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="127.0.0.1"/>
+    </bean>
+    
+     <!-- 用户的密码加密或解密 -->
+		 <bean id="passwordEncoder"
+		  class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+    
+    <bean id="userDao" class="com.zsl.dao.impl.UserDaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	  </bean>
+    
+</beans>
