@@ -1,9 +1,0 @@
-language: java
-jdk:
-    -oraclejdk7
-    -openjdk7
-
-before_install: echo "before install"
-install: echo "install"
-after_success: "after success"
-
