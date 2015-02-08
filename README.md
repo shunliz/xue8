@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/shunliz/xue8.png)](https://travis-ci.org/shunliz/xue8)
-
+[![Code Climate](https://codeclimate.com/github/shunliz/xue8/badges/gpa.svg)](https://codeclimate.com/github/shunliz/xue8)
 xue8
 ====
 
