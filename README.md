@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/shunliz/xue8.png)](https://travis-ci.org/shunliz/xue8)
+
 xue8
 ====
 
