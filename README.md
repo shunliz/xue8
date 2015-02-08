@@ -1,5 +1,9 @@
 [![Build Status](https://travis-ci.org/shunliz/xue8.png)](https://travis-ci.org/shunliz/xue8)
 [![Code Climate](https://codeclimate.com/github/shunliz/xue8/badges/gpa.svg)](https://codeclimate.com/github/shunliz/xue8)
+[![Test Coverage](https://codeclimate.com/github/shunliz/xue8/badges/coverage.svg)](https://codeclimate.com/github/shunliz/xue8)
+[![Dependencies](https://david-dm.org/phodal/freerice.svg?style=flat)](https://david-dm.org/phodal/iot-coap.svg?style=flat0)
+
+
 xue8
 ====
 
